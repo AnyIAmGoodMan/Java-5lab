@@ -1,9 +1,15 @@
+import Commands.*;
+import Managers.*;
+
 import java.io.File;
 
 /**
  * Главный класс программы.
- * Запускает приложение, инициализирует менеджеры
+ * Запускает приложение, инициализирует основные компоненты
  * и регистрирует команды.
+ *
+ * @author Daniyar
+ * @version 1.0
  */
 
 public class Main {
@@ -15,7 +21,7 @@ public class Main {
         XmlWriter xw = new XmlWriter(cm);
 
 
-        cmm.register(new HelpCommand());
+        cmm.register(new HelpCommand(cmm));
         cmm.register(new ExitCommand());
         cmm.register(new InfoCommand(cm));
         cmm.register(new ShowCommand(cm));
@@ -40,10 +46,14 @@ public class Main {
         File file = new File(fileName);
         if (file.exists()) {
             System.out.println("Файл найден");
+            if (!file.canRead()) {
+                System.out.println("Нет прав доступа к файлу");
+                return;
+            }
             xr.read(fileName, cm);
             cl.run();
         }else{
-            System.out.println("Такого файла не существует");
+            System.out.println("Такого файла не существует или у вас нет к нему доступа");
         }
     }
 }
