@@ -38,22 +38,16 @@ public class Main {
         cmm.register(new SaveCommand(xw));
         cmm.register(new UpdateIdCommand(cm));
 
-        if  (args.length == 0){
+        if (args.length == 0) {
             System.out.println("Неправильное название программы");
             System.exit(0);
         }
         String fileName = args[0];
-        File file = new File(fileName);
-        if (file.exists()) {
-            System.out.println("Файл найден");
-            if (!file.canRead()) {
-                System.out.println("Нет прав доступа к файлу");
-                return;
-            }
+        try {
             xr.read(fileName, cm);
             cl.run();
-        }else{
-            System.out.println("Такого файла не существует или у вас нет к нему доступа");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Этого файла не существует или у вас нет к нему доступа");
         }
     }
 }
