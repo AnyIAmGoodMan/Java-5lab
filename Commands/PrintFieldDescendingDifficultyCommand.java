@@ -4,13 +4,14 @@ import Managers.*;
 
 import Managers.CollectionManager;
 
+/**
+ * Команда print_field_descending_difficulty.
+ * Выводит значения сложности элементов коллекции
+ * в порядке убывания.
+ */
+
 public class PrintFieldDescendingDifficultyCommand implements Command {
 
-    /**
-     * Команда print_field_descending_difficulty.
-     * Выводит значения сложности элементов коллекции
-     * в порядке убывания.
-     */
 
     private CollectionManager cm;
 
