@@ -32,50 +32,46 @@ public class ExecuteScriptCommand implements Command {
      */
     public void execute(String arg) {
 
-        if (scriptRunning){
-            System.out.println("Скрипт уже выполняется\n");
-            return;
-        }
-
         if (arg == null) {
             System.out.println("Введите имя файла");
             return;
         }
 
-        if (!arg.endsWith(".xml")) {
-            System.out.println("Файл должен быть в формате xml\n");
+        File file = new File(arg);
+
+        if (!file.exists()) {
+            System.out.println("Файл не найден");
             return;
         }
-
-        File file = new File(arg);
 
         if (!file.canRead()) {
             System.out.println("Нет прав на чтение файла");
             return;
         }
 
-        if (!file.exists()) {
-            System.out.println("Файл не найден\n");
+        String path = file.getAbsolutePath();
+        
+        if (cmm.isExecuting(path)) {
+            System.out.println("Обнаружена рекурсия! Скрипт уже выполняется.");
             return;
         }
 
-        scriptRunning = true;
+        cmm.startScript(path);
 
-        try {
-            Scanner sc = new Scanner(file);
+        try (Scanner sc = new Scanner(file)) {
+
             while (sc.hasNextLine()) {
                 String line = sc.nextLine().trim();
-                if (line.equals("")) {
-                    continue;
-                }
+
+                if (line.isEmpty()) continue;
+
                 cmm.execute(line);
             }
-            sc.close();
+
         } catch (FileNotFoundException e) {
-            System.out.println("Ошибка открытия файла\n");
-        }
-        finally {
-            scriptRunning = false;
+            System.out.println("Ошибка открытия файла");
+        } finally {
+            cmm.endScript(path);
         }
     }
 }
