@@ -22,7 +22,7 @@ public class Main {
 
 
         cmm.register(new HelpCommand(cmm));
-        cmm.register(new ExitCommand());
+        cmm.register(new ExitCommand(cm));
         cmm.register(new InfoCommand(cm));
         cmm.register(new ShowCommand(cm));
         cmm.register(new AddCommand(cm));
@@ -35,15 +35,16 @@ public class Main {
         cmm.register(new PrintFieldDescendingDifficultyCommand(cm));
         cmm.register(new RemoveByIdCommand(cm));
         cmm.register(new RemoveHeadCommand(cm));
-        cmm.register(new SaveCommand(xw));
+        cmm.register(new SaveCommand(xw, cm));
         cmm.register(new UpdateIdCommand(cm));
 
         if (args.length == 0) {
-            System.out.println("Неправильное название программы");
+            System.out.println("Введите название программы (ожидается в формате java Main.java Название_файла.тип_файла).");
             System.exit(0);
         }
         String fileName = args[0];
         try {
+            cm.setFileName(fileName);
             xr.read(fileName, cm);
             cl.run();
         } catch (IllegalArgumentException e) {

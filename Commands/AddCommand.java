@@ -2,12 +2,17 @@ package Commands;
 import LabWorks.*;
 import Managers.*;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
 import java.util.Arrays;
 
 /**
- * Команда add.
- * Запрашивает данные у пользователя и создаёт объект LabWork.
+ * Команда {@code add} добавляет новый элемент {@link LabWork} в коллекцию.
+ *
+ * <p>Реализует интерактивный ввод данных через консоль:
+ * пользователь последовательно вводит все поля объекта.</p>
+ *
+ * <p>В процессе ввода выполняется валидация данных.</p>
  */
 
 public class AddCommand implements Command {
@@ -28,7 +33,25 @@ public class AddCommand implements Command {
 
 
     /**
-     @param arg аргумент команды (должна быть null)
+     * Выполняет команду добавления.
+     *
+     * <p>Алгоритм:
+     * <ol>
+     *     <li>Проверяет отсутствие аргументов</li>
+     *     <li>Запрашивает у пользователя значения полей</li>
+     *     <li>Проводит валидацию каждого поля</li>
+     *     <li>Создаёт объект {@link LabWork}</li>
+     *     <li>Добавляет его в {@link CollectionManager}</li>
+     * </ol>
+     *
+     * <p>Особенности:
+     * <ul>
+     *     <li>Поддерживает {@code null} для некоторых полей (minimalPoint, difficulty, author)</li>
+     *     <li>Использует {@link BigDecimal} для точной проверки чисел</li>
+     *     <li>Повторяет ввод до получения корректного значения</li>
+     * </ul>
+     *
+     * @param arg аргумент команды (должен быть {@code null})
      */
     public void execute(String arg) {
 
@@ -63,14 +86,19 @@ public class AddCommand implements Command {
 
         Float y;
         while (true) {
-            System.out.print("Введите coordinates.y:");
+            System.out.print("Введите coordinates.y (<= 352):");
             try {
-                y = Float.valueOf(sc.nextLine());
-                if (y > 352) {
+                String input = sc.nextLine();
+                BigDecimal bd = new BigDecimal(input);
+
+                if (bd.compareTo(new BigDecimal("352")) > 0) {
                     System.out.println("y должно быть <= 352");
                     continue;
                 }
+
+                y = bd.floatValue();
                 break;
+
             } catch (NumberFormatException e) {
                 System.out.println("Ожидалось число (float), меньшее 353");
             }
@@ -81,17 +109,21 @@ public class AddCommand implements Command {
         Long minimalPoint = null;
         while (true) {
             System.out.print("Введите minimalPoint (пустая строка = null):");
-            String mp = sc.nextLine();
+            String mp = sc.nextLine().trim();
 
             if (mp.equals("")) break;
 
             try {
-                minimalPoint = Long.valueOf(mp);
-                if (minimalPoint <= 0) {
+                BigDecimal bd = new BigDecimal(mp);
+
+                if (bd.compareTo(BigDecimal.ZERO) <= 0) {
                     System.out.println("minimalPoint должен быть больше 0");
                     continue;
                 }
+
+                minimalPoint = bd.longValue();
                 break;
+
             } catch (NumberFormatException e) {
                 System.out.println("Ожидалось целое число (Long), большее 0");
             }
@@ -134,14 +166,19 @@ public class AddCommand implements Command {
 
             double height;
             while (true) {
-                System.out.print("Введите height:");
+                System.out.print("Введите height (> 0):");
                 try {
-                    height = Double.valueOf(sc.nextLine());
-                    if (height <= 0) {
+                    String input = sc.nextLine();
+                    BigDecimal bd = new BigDecimal(input);
+
+                    if (bd.compareTo(BigDecimal.ZERO) <= 0) {
                         System.out.println("Рост должен быть большее 0");
                         continue;
                     }
+
+                    height = bd.doubleValue();
                     break;
+
                 } catch (NumberFormatException e) {
                     System.out.println("Ожидалось число (double)");
                 }
@@ -226,5 +263,6 @@ public class AddCommand implements Command {
         LabWork labWork = new LabWork(id, name, coordinates, null, minimalPoint, difficulty, author);
         cm.add(labWork);
         System.out.println("Элемент добавлен");
+        cm.setModified(true);
     }
 }

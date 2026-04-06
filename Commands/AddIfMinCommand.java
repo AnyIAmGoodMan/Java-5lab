@@ -2,12 +2,17 @@ package Commands;
 import LabWorks.*;
 import Managers.*;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
 import java.util.Arrays;
 
 /**
- * Команда add_if_min.
- * Запрашивает данные у пользователя и создаёт объект LabWork, если элемент меньше минимального в коллекции.
+ * Команда {@code add_if_min} добавляет новый элемент {@link LabWork}
+ * в коллекцию, если он меньше минимального элемента в коллекции.
+ *
+ * <p>Сравнение выполняется через {@link LabWork#compareTo(LabWork)}.</p>
+ *
+ * <p>Если коллекция пуста — элемент добавляется без сравнения.</p>
  */
 
 public class AddIfMinCommand implements Command {
@@ -25,7 +30,19 @@ public class AddIfMinCommand implements Command {
     }
 
     /**
-     * @param arg аргумент команды (должна быть null)
+     * Выполняет команду.
+     *
+     * <p>Алгоритм:
+     * <ol>
+     *     <li>Проверяет, что аргументы отсутствуют</li>
+     *     <li>Если коллекция пуста → вызывает {@link AddCommand}</li>
+     *     <li>Иначе запрашивает данные нового элемента</li>
+     *     <li>Находит минимальный элемент в коллекции</li>
+     *     <li>Сравнивает новый элемент с минимальным</li>
+     *     <li>Добавляет, если новый меньше</li>
+     * </ol>
+     *
+     * @param arg аргумент команды (должен быть {@code null})
      */
     public void execute(String arg) {
 
@@ -65,14 +82,19 @@ public class AddIfMinCommand implements Command {
 
         Float y;
         while (true) {
-            System.out.print("Введите coordinates.y:");
+            System.out.print("Введите coordinates.y (<= 352):");
             try {
-                y = Float.valueOf(sc.nextLine());
-                if (y > 352) {
+                String input = sc.nextLine();
+                BigDecimal bd = new BigDecimal(input);
+
+                if (bd.compareTo(new BigDecimal("352")) > 0) {
                     System.out.println("y должно быть <= 352");
                     continue;
                 }
+
+                y = bd.floatValue();
                 break;
+
             } catch (NumberFormatException e) {
                 System.out.println("Ожидалось число (float), меньшее 353");
             }
@@ -83,17 +105,21 @@ public class AddIfMinCommand implements Command {
         Long minimalPoint = null;
         while (true) {
             System.out.print("Введите minimalPoint (пустая строка = null):");
-            String mp = sc.nextLine();
+            String mp = sc.nextLine().trim();
 
             if (mp.equals("")) break;
 
             try {
-                minimalPoint = Long.valueOf(mp);
-                if (minimalPoint <= 0) {
+                BigDecimal bd = new BigDecimal(mp);
+
+                if (bd.compareTo(BigDecimal.ZERO) <= 0) {
                     System.out.println("minimalPoint должен быть больше 0");
                     continue;
                 }
+
+                minimalPoint = bd.longValue();
                 break;
+
             } catch (NumberFormatException e) {
                 System.out.println("Ожидалось целое число (Long), большее 0");
             }
@@ -136,14 +162,19 @@ public class AddIfMinCommand implements Command {
 
             double height;
             while (true) {
-                System.out.print("Введите height:");
+                System.out.print("Введите height (> 0):");
                 try {
-                    height = Double.valueOf(sc.nextLine());
-                    if (height <= 0) {
+                    String input = sc.nextLine();
+                    BigDecimal bd = new BigDecimal(input);
+
+                    if (bd.compareTo(BigDecimal.ZERO) <= 0) {
                         System.out.println("Рост должен быть большее 0");
                         continue;
                     }
+
+                    height = bd.doubleValue();
                     break;
+
                 } catch (NumberFormatException e) {
                     System.out.println("Ожидалось число (double)");
                 }
@@ -237,6 +268,7 @@ public class AddIfMinCommand implements Command {
         if (newLabWork.compareTo(min) < 0) {
             cm.add(newLabWork);
             System.out.println("Элемент добавлен\n");
+            cm.setModified(true);
         } else {
             System.out.println("Элемент не меньше минимального\n");
         }

@@ -1,4 +1,5 @@
 package Commands;
+
 import LabWorks.*;
 import Managers.*;
 
@@ -7,12 +8,17 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
- * Команда execute_script.
- * Выполняет команды, записанные в указанном файле.
+ * Команда {@code execute_script} выполняет команды,
+ * записанные в указанном файле.
+ *
+ * <p>Считывает файл построчно и передаёт каждую строку
+ * в {@link CommandManager} для выполнения.</p>
+ *
+ * <p>Поддерживает защиту от рекурсивного вызова скриптов
+ * (когда один скрипт вызывает сам себя напрямую или через другие скрипты).</p>
  */
-
 public class ExecuteScriptCommand implements Command {
-    private static boolean scriptRunning = false;
+
     CommandManager cmm;
 
     public ExecuteScriptCommand(CommandManager cmm) {
@@ -28,7 +34,27 @@ public class ExecuteScriptCommand implements Command {
     }
 
     /**
-     * @param arg аргумент команды - файл с исполняемыми командами (не может быть null)
+     * Выполняет команды из файла.
+     *
+     * <p>Алгоритм работы:
+     * <ol>
+     *     <li>Проверяет наличие аргумента (имя файла)</li>
+     *     <li>Проверяет существование файла и права доступа</li>
+     *     <li>Проверяет, не выполняется ли файл уже (защита от рекурсии)</li>
+     *     <li>Добавляет файл в список выполняемых скриптов</li>
+     *     <li>Считывает файл построчно</li>
+     *     <li>Каждую строку передаёт в {@link CommandManager#execute(String)}</li>
+     *     <li>После выполнения удаляет файл из списка выполняемых</li>
+     * </ol>
+     *
+     * <p>Особенности:
+     * <ul>
+     *     <li>Пустые строки игнорируются</li>
+     *     <li>Используется {@link Scanner} для чтения файла</li>
+     *     <li>Используется механизм {@link CommandManager} для предотвращения рекурсии</li>
+     * </ul>
+     *
+     * @param arg аргумент команды — имя файла (не может быть {@code null})
      */
     public void execute(String arg) {
 
@@ -50,7 +76,7 @@ public class ExecuteScriptCommand implements Command {
         }
 
         String path = file.getAbsolutePath();
-        
+
         if (cmm.isExecuting(path)) {
             System.out.println("Обнаружена рекурсия! Скрипт уже выполняется.");
             return;

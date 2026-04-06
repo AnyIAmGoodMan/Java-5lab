@@ -5,30 +5,36 @@ import Managers.*;
 import Managers.CollectionManager;
 
 /**
- * Команда remove_by_id.
- * Удаляет элемент коллекции с указанным id.
+ * Команда {@code remove_head} удаляет первый элемент коллекции.
  */
-
 public class RemoveHeadCommand implements Command {
 
     CollectionManager cm;
 
+    public RemoveHeadCommand(CollectionManager cm) {
+        this.cm = cm;
+    }
+
     /**
-     * @param arg аргумент команды (должна быть null)
+     * Удаляет и выводит первый элемент коллекции.
+     *
+     * <p>Если коллекция пуста — выводит сообщение.</p>
+     *
+     * @param arg аргумент команды (должен быть {@code null})
      */
     public void execute(String arg) {
         if (cm.size() == 0){
             System.out.println("Коллекция пуста\n");
-        }else{
+        } else {
             System.out.println("Элемент " + cm.removeHead() + " удален\n");
+            cm.setModified(true);
         }
     }
-    public RemoveHeadCommand(CollectionManager cm) {
-        this.cm = cm;
-    }
+
     public String getName() {
         return "remove_head";
     }
+
     public String getDescription() {
         return "Удаляет первый элемент коллекции";
     }

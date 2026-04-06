@@ -4,20 +4,65 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Класс элемента коллекции.
- * Представляет лабораторную работу с её характеристиками:
- * именем, координатами, сложностью, автором и другими полями.
- * Реализуется сортировка по minimalPoint.
+ * Класс {@code LabWork} представляет элемент коллекции.
+ *
+ * <p>Содержит информацию о лабораторной работе:
+ * <ul>
+ *     <li>уникальный идентификатор</li>
+ *     <li>название</li>
+ *     <li>координаты</li>
+ *     <li>дата создания</li>
+ *     <li>минимальный балл</li>
+ *     <li>сложность</li>
+ *     <li>автор</li>
+ * </ul>
+ *
+ * <p>Класс реализует интерфейс {@link Comparable} и поддерживает
+ * сортировку по полю {@code minimalPoint}.</p>
  */
+public class LabWork implements Comparable<LabWork> {
 
-public class LabWork implements  Comparable<LabWork>{
-    private Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    private String name; //Поле не может быть null, Строка не может быть пустой
-    private Coordinates coordinates; //Поле не может быть null
-    private java.time.ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
-    private Long minimalPoint; //Поле может быть null, Значение поля должно быть больше 0
-    private Difficulty difficulty; //Поле может быть null
-    private Person author; //Поле может быть null
+    /**
+     * Уникальный идентификатор.
+     * Не может быть {@code null}, должен быть больше 0.
+     */
+    private Long id;
+
+    /**
+     * Название работы.
+     * Не может быть {@code null} или пустым.
+     */
+    private String name;
+
+    /**
+     * Координаты работы.
+     * Не могут быть {@code null}.
+     */
+    private Coordinates coordinates;
+
+    /**
+     * Дата создания.
+     * Генерируется автоматически и не изменяется.
+     */
+    private final ZonedDateTime creationDate;
+
+    /**
+     * Минимальный балл.
+     * Может быть {@code null}, но если задан — должен быть больше 0.
+     */
+    private Long minimalPoint;
+
+    /**
+     * Сложность работы.
+     * Может быть {@code null}.
+     */
+    private Difficulty difficulty;
+
+    /**
+     * Автор работы.
+     * Может быть {@code null}.
+     */
+    private Person author;
 
     public Long getId(){return id;}
     public String getName(){return name;}
@@ -52,6 +97,25 @@ public class LabWork implements  Comparable<LabWork>{
         this.author = author;
     }
 
+
+    /**
+     * Сравнивает текущий объект с другим {@link LabWork}.
+     *
+     * <p>Сравнение происходит по:
+     * <ol>
+     *     <li>{@code minimalPoint}</li>
+     *     <li>при равенстве — по {@code id}</li>
+     * </ol>
+     *
+     * <p>Правила:
+     * <ul>
+     *     <li>{@code null} считается меньше любого значения</li>
+     *     <li>если оба {@code minimalPoint == null} → сравнение по id</li>
+     * </ul>
+     *
+     * @param lw объект для сравнения
+     * @return отрицательное, ноль или положительное число
+     */
     public int compareTo(LabWork lw) {
         if (this.minimalPoint == null && lw.getMinimalPoint() == null)
             return this.id.compareTo(lw.getId());
@@ -73,6 +137,12 @@ public class LabWork implements  Comparable<LabWork>{
         this.difficulty = difficulty;
         this.author = author;
     }
+
+    /**
+     * Возвращает строковое представление объекта.
+     *
+     * @return строка с полями объекта
+     */
 
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");

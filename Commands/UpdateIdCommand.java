@@ -2,15 +2,13 @@ package Commands;
 import LabWorks.*;
 import Managers.*;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
 import java.util.Arrays;
 
 /**
- * Команда update_id.
- * Обновляет элемент коллекции с указанным id, запрашивая новые значения его полей.
+ * Команда {@code update_id} обновляет элемент коллекции по указанному id.
  */
-
-
 public class UpdateIdCommand implements Command {
 
     CollectionManager cm;
@@ -26,8 +24,22 @@ public class UpdateIdCommand implements Command {
     public String getDescription() {
         return "Обновляет элемент коллекции по id";
     }
+
     /**
-     * @param arg аргумент команды - айди по которому обновляют (не может быть null)
+     * Обновляет элемент коллекции.
+     *
+     * <p>Алгоритм:
+     * <ol>
+     *     <li>Проверяет корректность id</li>
+     *     <li>Ищет элемент в коллекции</li>
+     *     <li>Запрашивает новые значения полей</li>
+     *     <li>Удаляет старый элемент</li>
+     *     <li>Создаёт и добавляет новый</li>
+     * </ol>
+     *
+     * <p>Если элемент с указанным id не найден — выводит сообщение.</p>
+     *
+     * @param arg id элемента (не может быть {@code null})
      */
     public void execute(String arg) {
         if (arg == null) {
@@ -84,14 +96,19 @@ public class UpdateIdCommand implements Command {
 
         Float y;
         while (true) {
-            System.out.print("Введите coordinates.y:");
+            System.out.print("Введите coordinates.y (<= 352):");
             try {
-                y = Float.valueOf(sc.nextLine());
-                if (y > 352) {
+                String input = sc.nextLine();
+                BigDecimal bd = new BigDecimal(input);
+
+                if (bd.compareTo(new BigDecimal("352")) > 0) {
                     System.out.println("y должно быть <= 352");
                     continue;
                 }
+
+                y = bd.floatValue();
                 break;
+
             } catch (NumberFormatException e) {
                 System.out.println("Ожидалось число (float), меньшее 353");
             }
@@ -102,17 +119,21 @@ public class UpdateIdCommand implements Command {
         Long minimalPoint = null;
         while (true) {
             System.out.print("Введите minimalPoint (пустая строка = null):");
-            String mp = sc.nextLine();
+            String mp = sc.nextLine().trim();
 
             if (mp.equals("")) break;
 
             try {
-                minimalPoint = Long.valueOf(mp);
-                if (minimalPoint <= 0) {
+                BigDecimal bd = new BigDecimal(mp);
+
+                if (bd.compareTo(BigDecimal.ZERO) <= 0) {
                     System.out.println("minimalPoint должен быть больше 0");
                     continue;
                 }
+
+                minimalPoint = bd.longValue();
                 break;
+
             } catch (NumberFormatException e) {
                 System.out.println("Ожидалось целое число (Long), большее 0");
             }
@@ -155,14 +176,19 @@ public class UpdateIdCommand implements Command {
 
             double height;
             while (true) {
-                System.out.print("Введите height:");
+                System.out.print("Введите height (> 0):");
                 try {
-                    height = Double.valueOf(sc.nextLine());
-                    if (height <= 0) {
+                    String input = sc.nextLine();
+                    BigDecimal bd = new BigDecimal(input);
+
+                    if (bd.compareTo(BigDecimal.ZERO) <= 0) {
                         System.out.println("Рост должен быть большее 0");
                         continue;
                     }
+
+                    height = bd.doubleValue();
                     break;
+
                 } catch (NumberFormatException e) {
                     System.out.println("Ожидалось число (double)");
                 }
@@ -239,13 +265,17 @@ public class UpdateIdCommand implements Command {
                 }
                 break;
             }
+
             Location location = new Location(lx, ly, lname);
             author = new Person(authorName, height, passportID, hairColor, location);
         }
+
         LabWork labWork = new LabWork(id, name, coordinates, null, minimalPoint, difficulty, author);
+
         cm.removeById(id);
         cm.add(labWork);
 
         System.out.println("Элемент обновлен\n");
+        cm.setModified(true);
     }
 }

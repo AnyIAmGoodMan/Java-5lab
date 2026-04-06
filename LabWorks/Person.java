@@ -1,17 +1,54 @@
 package LabWorks;
 
 /**
- * Класс автора лабораторной работы.
- * Содержит информацию об имени, росте, паспорте,
- * цвете волос и местоположении.
+ * Класс {@code Person} представляет автора лабораторной работы.
+ *
+ * <p>Содержит информацию о:
+ * <ul>
+ *     <li>имени</li>
+ *     <li>росте</li>
+ *     <li>паспортном идентификаторе</li>
+ *     <li>цвете волос</li>
+ *     <li>местоположении</li>
+ * </ul>
+ *
+ * <p>Класс обеспечивает валидацию данных через сеттеры.</p>
  */
 
 public class Person{
-    private String name; //Поле не может быть null, Строка не может быть пустой
-    private double height; //Значение поля должно быть больше 0
-    private String passportID; //Длина строки должна быть не меньше 10, Строка не может быть пустой, Поле может быть null
-    private Color hairColor; //Поле может быть null
-    private Location location; //Поле не может быть null
+    /**
+     * Имя автора.
+     * Не может быть {@code null} или пустой строкой.
+     */
+    private String name;
+
+    /**
+     * Рост автора.
+     * Должен быть больше 0.
+     */
+    private double height;
+
+    /**
+     * Паспортный идентификатор.
+     * Может быть {@code null}, но если задан:
+     * <ul>
+     *     <li>не может быть пустым</li>
+     *     <li>длина не менее 10 символов</li>
+     * </ul>
+     */
+    private String passportID;
+
+    /**
+     * Цвет волос.
+     * Может быть {@code null}.
+     */
+    private Color hairColor;
+
+    /**
+     * Местоположение автора.
+     * Не может быть {@code null}.
+     */
+    private Location location;
 
     public String getName(){return name;}
     public double getHeight() {return height;}

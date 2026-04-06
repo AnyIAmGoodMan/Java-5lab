@@ -1,12 +1,11 @@
 package Commands;
+
 import LabWorks.*;
 import Managers.*;
 
 /**
- * Команда history.
- * Показывает последние выполненные команды.
+ * Команда {@code history} выводит последние выполненные команды.
  */
-
 public class HistoryCommand implements Command {
 
     private CommandManager cmm;
@@ -24,7 +23,12 @@ public class HistoryCommand implements Command {
     }
 
     /**
-     * @param arg аргумент команды (должна быть null)
+     * Выводит историю команд.
+     *
+     * <p>История хранится в {@link CommandManager#history}
+     * и содержит последние выполненные команды (до 14).</p>
+     *
+     * @param arg аргумент команды (должен быть {@code null})
      */
     public void execute(String arg) {
 
@@ -36,6 +40,7 @@ public class HistoryCommand implements Command {
         for (String commandName : cmm.history) {
             System.out.println(commandName);
         }
+
         System.out.println("\n");
     }
 }

@@ -2,9 +2,11 @@ package Commands;
 import LabWorks.*;
 import Managers.*;
 
+
 /**
- * Команда clear.
- * Очищает коллекцию.
+ * Команда {@code clear} очищает коллекцию {@link LabWork}.
+ *
+ * <p>Удаляет все элементы из коллекции, управляемой {@link CollectionManager}.</p>
  */
 
 public class ClearCommand  implements Command {
@@ -16,7 +18,12 @@ public class ClearCommand  implements Command {
     }
 
     /**
-     * @param arg аргумент команды (должна быть null)
+     * Выполняет команду.
+     *
+     * <p>Если коллекция пуста — выводит сообщение.
+     * Иначе очищает коллекцию.</p>
+     *
+     * @param arg аргумент команды (должен быть {@code null})
      */
     public void execute(String arg) {
 
@@ -25,6 +32,7 @@ public class ClearCommand  implements Command {
         }else {
             cm.clear();
             System.out.println("Коллекция очищена\n");
+            cm.setModified(true);
         }
     }
     public String getName() {

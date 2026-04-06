@@ -5,22 +5,27 @@ import Managers.*;
 import Managers.CollectionManager;
 
 /**
- * Команда show.
- * Выводит все элементы коллекции LabWork
+ * Команда {@code show} выводит все элементы коллекции {@link LabWork}.
  */
-
 public class ShowCommand implements Command {
 
     CollectionManager manager;
-    
+
     public String getName(){
         return "show";
     }
+
     public String getDescription(){
         return "Показывает все LabWork-и в коллекции";
     }
+
     /**
-     * @param arg аргумент команды (должна быть null)
+     * Выводит все элементы коллекции.
+     *
+     * <p>Перебирает коллекцию из {@link CollectionManager}
+     * и выводит строковое представление каждого элемента.</p>
+     *
+     * @param arg аргумент команды (должен быть {@code null})
      */
     public void execute(String arg){
         for(LabWork labWork : manager.getCollection()){
@@ -28,6 +33,7 @@ public class ShowCommand implements Command {
         }
         System.out.println("\n");
     }
+
     public ShowCommand(CollectionManager cm){
         this.manager = cm;
     }

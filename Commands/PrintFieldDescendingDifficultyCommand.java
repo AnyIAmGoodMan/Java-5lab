@@ -5,13 +5,12 @@ import Managers.*;
 import Managers.CollectionManager;
 
 /**
- * Команда print_field_descending_difficulty.
- * Выводит значения сложности элементов коллекции
- * в порядке убывания.
+ * Команда {@code print_field_descending_difficulty} выводит значения
+ * сложности элементов коллекции в порядке убывания.
+ *
+ * <p>Список формируется в {@link CollectionManager#PFDD()}.</p>
  */
-
 public class PrintFieldDescendingDifficultyCommand implements Command {
-
 
     private CollectionManager cm;
 
@@ -28,7 +27,11 @@ public class PrintFieldDescendingDifficultyCommand implements Command {
     }
 
     /**
-     * @param arg аргумент команды - искомая сложность (не может быть null)
+     * Выводит значения {@link Difficulty} в порядке убывания.
+     *
+     * <p>Если список пуст — выводит сообщение.</p>
+     *
+     * @param arg аргумент команды (игнорируется)
      */
     public void execute(String arg) {
         if (cm.PFDD().isEmpty()) {
@@ -39,6 +42,7 @@ public class PrintFieldDescendingDifficultyCommand implements Command {
         for (Difficulty difficulty : cm.PFDD()) {
             System.out.println(difficulty);
         }
+
         System.out.println("\n");
     }
 }

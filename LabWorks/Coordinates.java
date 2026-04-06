@@ -1,12 +1,31 @@
 package LabWorks;
 
 /**
- * Класс координат.
- * Содержит значения x и y для объекта LabWork.
+ * Класс {@code Coordinates} представляет координаты объекта {@link LabWork}.
+ *
+ * <p>Содержит две координаты:
+ * <ul>
+ *     <li>{@code x} — целое число</li>
+ *     <li>{@code y} — число с плавающей точкой (не более 352)</li>
+ * </ul>
+ *
+ * <p>Ограничения:
+ * <ul>
+ *     <li>{@code y} не может быть {@code null}</li>
+ *     <li>{@code y} должно быть ≤ 352</li>
+ * </ul>
  */
+public class Coordinates {
 
-public class Coordinates{
+    /**
+     * Координата X.
+     */
     private long x;
+
+    /**
+     * Координата Y.
+     * Не может быть {@code null}, максимальное значение — 352.
+     */
     private Float y;
 
     public long getX() {return x;}

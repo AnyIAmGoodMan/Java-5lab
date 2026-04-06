@@ -1,14 +1,36 @@
 package LabWorks;
 
 /**
- * Класс местоположения.
- * Используется для хранения координат и названия места.
+ * Класс {@code Location} представляет местоположение автора.
+ *
+ * <p>Содержит координаты и необязательное название места.</p>
+ *
+ * <p>Ограничения:
+ * <ul>
+ *     <li>{@code x} — не может быть {@code null}</li>
+ *     <li>{@code y} — не может быть {@code null}</li>
+ *     <li>{@code name} — может быть {@code null}, но если задано, не может быть пустым</li>
+ * </ul>
  */
-
 public class Location {
-    private Integer x; //Поле не может быть null
-    private Float y; //Поле не может быть null
-    private String name; //Строка не может быть пустой, Поле может быть null
+
+    /**
+     * Координата X.
+     * Не может быть {@code null}.
+     */
+    private Integer x;
+
+    /**
+     * Координата Y.
+     * Не может быть {@code null}.
+     */
+    private Float y;
+
+    /**
+     * Название места.
+     * Может быть {@code null}, но не может быть пустой строкой.
+     */
+    private String name;
 
     public Integer getX() {return x;}
     public Float getY() {return y;}
